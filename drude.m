@@ -85,4 +85,4 @@ w_plasma_damp = e0 / (mass * mobility);
 epsr_plasma = epsr_bulk * (1 - w_p^2 ./(w.^2 + 1i * w * w_plasma_damp));
 
 % Find the total permittivity
-epsr = epsr_bulk + epsr_phonon - epsr_plasma;
+epsr = epsr_phonon + epsr_plasma;
