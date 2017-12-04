@@ -28,6 +28,11 @@ function epsr = drude(material, f, varargin)
 % (c) Alex Valavanis <a.valavanis@leeds.ac.uk>
 %     University of Leeds, 2017
 
+%% Check for suitable MATLAB version
+if verLessThan('matlab', '8.2')
+    error('MATLAB 2013b or higher is required');
+end
+
 %% Handle input arguments
 parser = inputParser;
 
