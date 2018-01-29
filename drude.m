@@ -69,37 +69,54 @@ epsr_bulk     = material_list(material).eps_r;
 w_LO          = material_list(material).w_LO;
 w_TO          = material_list(material).w_TO;
 w_phonon_damp = material_list(material).w_phonon_damp;
-mu_L_300      = material_list(material).mu_L_300;
-mu_min_300    = material_list(material).mu_min_300;
-N_ref_300     = material_list(material).N_ref_300;
-gamma_0       = material_list(material).gamma_0;
-gamma_1       = material_list(material).gamma_1;
-gamma_2       = material_list(material).gamma_2;
-w_p           = material_list(material).w_p;
-w_plasma_damp = material_list(material).w_plasma_damp;
                              
 %% Calculate useful input parameters
 % Radiation frequency [rad/s]
 w = f * 1e12 * 2*pi;
 
 %% Calculate the phonon contribution to the relative permittivity
-epsr_phonon = epsr_bulk * (w_LO^2 - w_TO^2) ./ (w_TO^2 - w.^2 - 1i*w*w_phonon_damp);
+epsr_phonon = epsr_bulk * (w_LO^2 - w_TO^2) ...
+              ./ (w_TO^2 - w.^2 - 1i*w*w_phonon_damp);
 
 %% Find the plasma contribution to the relative permittivity
 
+% First, try to grab the plasma frequency and damping factor from the
+% material library
+w_p           = material_list(material).w_p;
+w_plasma_damp = material_list(material).w_plasma_damp;
+
+% If we couldn't find the plasma frequency, calculate it
 if (w_p == 0)
     % Find the plasma frequency [rad/s]
     % Note that N_d is converted to m^{-3} here
     w_p = sqrt(N_d * 100^3 * e0^2 / (eps0 * epsr_bulk * mass));
+end
+
+% If we couldn't find the plasma frequency, calculate it from mobility
+if (w_plasma_damp == 0)
+    % Try to read the bulk, room-temperature, undoped value
+    mobility = material_list(material).mobility;
+
+    % If we don't have a fixed mobility value, calculate it from the
+    % Caughey-Thomas model
+    if (mobility == 0)
+        % Read Caughey-Thomas parameters
+        mu_L_300      = material_list(material).mu_L_300;
+        mu_min_300    = material_list(material).mu_min_300;
+        N_ref_300     = material_list(material).N_ref_300;
+        gamma_0       = material_list(material).gamma_0;
+        gamma_1       = material_list(material).gamma_1;
+        gamma_2       = material_list(material).gamma_2;
+
+        % Find mobility using Caughey-Thomas model
+        % Note that the N_ref value can stay in cm^{-3}
+        mu_L   = mu_L_300   * (T/300)^gamma_0;
+        mu_min = mu_min_300 * (T/300)^gamma_1;
+        N_ref  = N_ref_300  * (T/300)^gamma_2;
     
-    % Find mobility using Caughey-Thomas model
-    % Note that the N_ref value can stay in cm^{-3}
-    mu_L   = mu_L_300   * (T/300)^gamma_0;
-    mu_min = mu_min_300 * (T/300)^gamma_1;
-    N_ref  = N_ref_300  * (T/300)^gamma_2;
-    
-    mobility = mu_min + (mu_L - mu_min) / (1 + sqrt(N_d / N_ref));
-    
+        mobility = mu_min + (mu_L - mu_min) / (1 + sqrt(N_d / N_ref))
+    end
+
     % Find the plama damping factor [rad/s]
     w_plasma_damp = e0 / (mass * mobility);
 end

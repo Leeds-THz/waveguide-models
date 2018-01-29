@@ -53,6 +53,14 @@ InP.set_phonon_params(42.78, 37.65, 0.43);
 InP.set_caughey_thomas_params(5300, 1520, 6.4e16, -1.9, 2, 3.7);
 material_list('InP') = InP;
 
+%% Set properties for InSb
+InSb = Material;
+InSb.set_eff_mass(0.014);
+InSb.eps_r    = 15.15;
+InSb.set_phonon_params(24.4, 22.9, 0.38);
+InSb.mobility = 7.7e4; % We only know undoped, room-temperature value
+material_list('InSb') = InSb;
+
 %% Set properties for Si
 Si = Material;
 Si.set_eff_mass(0.156); %Assume electron mass at Gamma

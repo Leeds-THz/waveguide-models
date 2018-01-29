@@ -25,6 +25,9 @@ classdef Material < handle
         % Plasma parameters
         w_p           = 0; % Plasma frequency [rad/s]
         w_plasma_damp = 0; % Plasma damping frequency [rad/s]
+
+        % Electron mobility for pure, undoped room-temperature material
+        mobility   = 0; % cm^2 / (Vs)        
         
         % Caughey-Thomas mobility parameters
         mu_L_300   = 0; % cm^2 / (Vs)
