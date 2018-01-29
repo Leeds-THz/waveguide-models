@@ -3,6 +3,16 @@ function material_list = materiallibrary()
 % Create an empty table to contain all the parameters
 material_list = containers.Map;
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% SEMICONDUCTORS %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+AlAs = Material;
+AlAs.set_eff_mass(0.150);
+AlAs.eps_r    = 8.48;
+AlAs.set_phonon_params(49.78, 44.86, 0.99);
+AlAs.set_caughey_thomas_params(410, 10, 1e17, -2.1, 0.0, 0.0);
+material_list('AlAs') = AlAs;
+
 %% Set properties for GaAs
 GaAs = Material;
 GaAs.set_eff_mass(0.067);
