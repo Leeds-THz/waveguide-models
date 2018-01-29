@@ -1,4 +1,18 @@
 function material_list = materiallibrary()
+% MATERIALLIBRARY Returns a library of properties for common materials
+% 
+% material_list = MATERIALLIBRARY()
+%
+% RETURNS:
+%   material_list - A map object containing data for materials
+%
+% EXAMPLES:
+%   Get the effective mass of GaAs:
+%     materials = materiallibrary();
+%     m = materials('GaAs').eff_mass;
+%
+% (c) Alex Valavanis <a.valavanis@leeds.ac.uk>
+%     University of Leeds, 2018
 
 % Create an empty table to contain all the parameters
 material_list = containers.Map;
@@ -6,6 +20,8 @@ material_list = containers.Map;
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%% SEMICONDUCTORS %%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Set properties for AlAs
 AlAs = Material;
 AlAs.set_eff_mass(0.150);
 AlAs.eps_r    = 8.48;
@@ -20,6 +36,22 @@ GaAs.eps_r    = 10.89;
 GaAs.set_phonon_params(36.22, 33.32, 0.30);
 GaAs.set_caughey_thomas_params(8500, 800, 1e17, -2.2, -0.9, 6.2);
 material_list('GaAs') = GaAs;
+
+%% Set properties for InAs
+InAs = Material;
+InAs.set_eff_mass(0.023);
+InAs.eps_r    = 12.25;
+InAs.set_phonon_params(29.76, 27.03, 0.50);
+InAs.set_caughey_thomas_params(32500, 11700, 4.4e16, -1.7, -0.33, 3.6);
+material_list('InAs') = InAs;
+
+%% Set properties for InP
+InP = Material;
+InP.set_eff_mass(0.08);
+InP.eps_r    = 9.61;
+InP.set_phonon_params(42.78, 37.65, 0.43);
+InP.set_caughey_thomas_params(5300, 1520, 6.4e16, -1.9, 2, 3.7);
+material_list('InP') = InP;
 
 %% Set properties for Si
 Si = Material;
